@@ -1,0 +1,165 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://Main.gd" type="Script" id=1]
+[ext_resource path="res://LetterBubble.tscn" type="PackedScene" id=2]
+[ext_resource path="res://background.jpg" type="Texture" id=3]
+[ext_resource path="res://fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://sounds/pop.wav" type="AudioStream" id=5]
+[ext_resource path="res://sounds/fail.wav" type="AudioStream" id=6]
+[ext_resource path="res://sounds/gameover.wav" type="AudioStream" id=7]
+[ext_resource path="res://sounds/success.wav" type="AudioStream" id=8]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0, 0, 0, 1 )
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 1, 0, 0, 1 )
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="DynamicFont" id=3]
+size = 48
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 32
+font_data = ExtResource( 4 )
+
+[node name="GameLogic" type="Node2D"]
+script = ExtResource( 1 )
+Bubble = ExtResource( 2 )
+
+[node name="BubbleSpawnTimer" type="Timer" parent="."]
+wait_time = 0.5
+autostart = true
+
+[node name="NewScoreTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="GameSpace" type="Node2D" parent="."]
+
+[node name="background" type="Sprite" parent="GameSpace"]
+position = Vector2( 360, 640 )
+scale = Vector2( 0.9, 0.914286 )
+texture = ExtResource( 3 )
+
+[node name="BottomPanel" type="Panel" parent="."]
+anchor_bottom = 1.0
+margin_left = 20.0
+margin_top = 1110.0
+margin_right = 700.0
+margin_bottom = 1210.0
+rect_pivot_offset = Vector2( -573.906, -935.354 )
+custom_styles/panel = SubResource( 1 )
+
+[node name="TimeBar" type="Panel" parent="BottomPanel"]
+anchor_bottom = 1.0
+margin_top = 110.0
+margin_right = 680.0
+margin_bottom = 50.0
+rect_pivot_offset = Vector2( -573.906, -935.354 )
+custom_styles/panel = SubResource( 2 )
+
+[node name="WordTemplate" type="Label" parent="BottomPanel"]
+margin_left = 20.0
+margin_top = 10.0
+margin_right = 660.0
+margin_bottom = 90.0
+custom_fonts/font = SubResource( 3 )
+text = "EXAMPLE TEXT"
+align = 1
+valign = 1
+
+[node name="WordComplete" type="Label" parent="BottomPanel"]
+margin_left = 20.0
+margin_top = 10.0
+margin_right = 660.0
+margin_bottom = 90.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0, 1, 0.0392157, 1 )
+text = "EXAMPLE TEXT"
+align = 1
+valign = 1
+percent_visible = 0.0
+
+[node name="NewScorePanel" type="Panel" parent="BottomPanel"]
+anchor_bottom = 1.0
+margin_left = 250.0
+margin_top = -60.0
+margin_right = 450.0
+margin_bottom = -110.0
+rect_pivot_offset = Vector2( -573.906, -935.354 )
+custom_styles/panel = SubResource( 1 )
+
+[node name="Score" type="Label" parent="BottomPanel/NewScorePanel"]
+margin_right = 200.0
+margin_bottom = 50.0
+custom_fonts/font = SubResource( 4 )
+text = "0"
+align = 1
+valign = 1
+
+[node name="TopPanel" type="Panel" parent="."]
+anchor_bottom = 1.0
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 700.0
+margin_bottom = 120.0
+rect_pivot_offset = Vector2( -573.906, -935.354 )
+custom_styles/panel = SubResource( 1 )
+
+[node name="Score" type="Label" parent="TopPanel"]
+margin_left = 20.0
+margin_top = 10.0
+margin_right = 660.0
+margin_bottom = 90.0
+custom_fonts/font = SubResource( 3 )
+text = "0"
+align = 1
+valign = 1
+
+[node name="HealthTimer" type="Timer" parent="."]
+wait_time = 20.0
+one_shot = true
+autostart = true
+
+[node name="GameOverText" type="Label" parent="."]
+visible = false
+margin_left = -280.0
+margin_top = 380.0
+margin_right = 360.0
+margin_bottom = 460.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_scale = Vector2( 2, 2 )
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+text = "GAME OVER"
+align = 1
+valign = 1
+
+[node name="PopS" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+
+[node name="PopF" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 6 )
+volume_db = -10.0
+
+[node name="Gameover" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 7 )
+volume_db = -5.0
+
+[node name="Success" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 8 )
+
+[connection signal="timeout" from="BubbleSpawnTimer" to="." method="_on_BubbleSpawnTimer_timeout"]
+[connection signal="timeout" from="NewScoreTimer" to="." method="_on_NewScoreTimer_timeout"]
+[connection signal="timeout" from="HealthTimer" to="." method="_on_HealthTimer_timeout"]
